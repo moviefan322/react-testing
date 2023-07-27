@@ -1,0 +1,28 @@
+name: Generate Report
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate Report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          base_branch=${{github.event.pull_request.base.ref}}
+          head_branch=${{github.event.pull_request.head.ref}}
+          git fetch origin $base_branch
+          git fetch origin $head_branch
+          git diff "origin/$base_branch..origin/$head_branch" > report.txt
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: report
+          path: report.txt
