@@ -20,9 +20,9 @@ jobs:
         run: |
           base_branch="${{ github.event.pull_request.base.ref }}"
           head_branch="${{ github.event.pull_request.head.ref }}"
-
           echo "Base Branch: $base_branch"
           echo "Head Branch: $head_branch"
           echo "Timestamp: $(date)"
-
-          git diff $base_branch..$head_branch
+          git fetch origin $base_branch
+          git fetch origin $head_branch
+          git diff origin/$base_branch..origin/$head_branch
