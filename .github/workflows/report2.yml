@@ -17,9 +17,12 @@ jobs:
         run: |
           base_branch=${{github.event.pull_request.base.ref}}
           head_branch=${{github.event.pull_request.head.ref}}
+          echo "Base branch: $base_branch"
+          echo "Head branch: $head_branch"
           git fetch origin $base_branch
           git fetch origin $head_branch
-          git diff "origin/$base_branch..origin/$head_branch" > report.txt
+          git diff "origin/$base_branch..origin/$head_branch" > report.txt || echo "No differences found"
+          cat report.txt
 
       - name: Upload Report
         uses: actions/upload-artifact@v2

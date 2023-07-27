@@ -1,4 +1,4 @@
-name: Generate Report
+name: Generate Report 2
 on:
   pull_request:
     types:
