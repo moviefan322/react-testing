@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Generate Report
         run: |
@@ -21,7 +21,7 @@ jobs:
           echo "Base Branch: $base_branch"
           echo "Head Branch: $head_branch"
           echo "Timestamp: $(date)"
-          git fetch origin $base_branch
+          git fetch origin ${{ github.ref }}
           git fetch origin $head_branch
           git diff origin/$base_branch..origin/$head_branch > report.txt
 
