@@ -2,12 +2,10 @@ name: Generate Report
 on:
   pull_request:
     types:
-      - opened
-      - synchronize
-      - reopened
+      - closed
   push:
     branches:
-      - 'main'
+      - "main"
 
 jobs:
   generate_report:
@@ -25,4 +23,10 @@ jobs:
           echo "Timestamp: $(date)"
           git fetch origin $base_branch
           git fetch origin $head_branch
-          git diff origin/$base_branch..origin/$head_branch
+          git diff origin/$base_branch..origin/$head_branch > report.txt
+
+      - name: Upload Report Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: diff-report
+          path: report.txt
