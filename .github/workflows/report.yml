@@ -1,13 +1,11 @@
 name: Generate Report
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
   push:
     branches:
-      - 'main'
+      - main
+  pull_request:
+    types:
+      - closed
 
 jobs:
   generate_report:
@@ -18,11 +16,20 @@ jobs:
 
       - name: Generate Report
         run: |
-          base_branch="${{ github.event.pull_request.base.ref }}"
-          head_branch="${{ github.event.pull_request.head.ref }}"
+          base_branch="${{ env.GITHUB_BASE_REF }}"
+          head_branch="${{ env.GITHUB_HEAD_REF }}"
+          if [ -z "$head_branch" ]; then
+            head_branch=$(basename "${{ env.GITHUB_REF }}")
+          fi
           echo "Base Branch: $base_branch"
           echo "Head Branch: $head_branch"
           echo "Timestamp: $(date)"
           git fetch origin $base_branch
           git fetch origin $head_branch
-          git diff origin/$base_branch..origin/$head_branch
+          git diff origin/$base_branch..origin/$head_branch > report.txt
+
+      - name: Upload Report Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: diff-report
+          path: report.txt
