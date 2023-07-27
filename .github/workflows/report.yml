@@ -26,7 +26,7 @@ jobs:
           echo "Timestamp: $(date)"
           git fetch origin $base_branch
           git fetch origin $head_branch
-          git diff origin/$base_branch...origin/$head_branch > report.txt
+          git diff "origin/$base_branch..origin/$head_branch" > report.txt
 
       - name: Upload Report Artifact
         uses: actions/upload-artifact@v2
