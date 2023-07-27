@@ -13,7 +13,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Generate Report
         run: |
           base_branch="${{ env.GITHUB_BASE_REF }}"
@@ -24,7 +23,8 @@ jobs:
           echo "Base Branch: $base_branch"
           echo "Head Branch: $head_branch"
           echo "Timestamp: $(date)"
-          git remote update
+          git fetch origin $base_branch
+          git fetch origin $head_branch
           git diff "origin/$base_branch..origin/$head_branch" > report.txt
 
       - name: Upload Report Artifact
